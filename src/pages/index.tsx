@@ -2,27 +2,52 @@ import Head from "next/head";
 import StreamPreview from "../components/StreamPreview";
 import { useState, useSyncExternalStore } from "react";
 
-const liveStreams = [
-  {
-    channelName: "theprimeagen",
-    title: "Programming a twitch downloader in GO",
-    game: "Programming",
-  },
-];
-
-async function fetchData() {
-  const response = await fetch("/api/twitch");
-  if (response.ok) {
-    const data = await response.json();
-    // Process the data as needed
-  } else {
-    console.error("Failed to fetch data");
-  }
+const displayLivestreamArray = (array)=>{
+  return array.map((stream) => {
+    return(
+      <>
+      <StreamPreview liveStream={stream}></StreamPreview>
+      </>
+    )
+  } );
 }
 
 export default function Home() {
   //fetchData();
   const [counter, setCounter] = useState(0);
+
+  const [homeLivestreamsData, setHomeLivestreamsData] = useState([  {
+    channelName: "theprimeagen",
+    title: "Programming a twitch downloader in GO",
+    game: "Programming",
+    thumbnailUrl: ""
+  }]);
+
+  const fetchData = async () => {
+    console.log("Fetching");
+    const response = await fetch("/api/getHomeStreams");
+    console.log("Fetching done");
+    if (response.ok) {
+      const data = (await response.json()).data;
+      console.log("Data: ");
+      console.log(data);
+      
+      const liveStreams = data.map((stream) => ({
+        channelName: stream.channelName,
+        title: stream.title,
+        game: stream.game,
+        thumbnailUrl: stream.thumbnail_url
+      }));
+  
+      setHomeLivestreamsData(liveStreams);
+  
+      console.log("LiveStreams: ");
+      console.log(liveStreams);
+    } else {
+      console.error("Failed to fetch data");
+    }
+  };
+  
   return (
     <>
       <Head>
@@ -32,10 +57,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <StreamPreview liveStream={liveStreams[0]}></StreamPreview>
+        {/* <StreamPreview liveStream={homeLivestreamsData[0]}></StreamPreview> */}
+        {displayLivestreamArray(homeLivestreamsData)}
         <button
           onClick={() => {
             setCounter(counter + 1);
+            fetchData();
           }}
         >
           CLick me
