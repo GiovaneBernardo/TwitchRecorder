@@ -4,7 +4,7 @@ const changeStreamThumbnailUrlSize = (url, width, height)=>{
   return url.replace('{width}', width).replace('{height}', height);
 }
 
-const StreamPreview = (props) => {
+const ChannelPreview = (props) => {
   return (
     <>
     <div>
@@ -17,4 +17,4 @@ const StreamPreview = (props) => {
   );
 }
 
-export default StreamPreview;
+export default ChannelPreview;
