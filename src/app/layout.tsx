@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
 import { SearchProvider } from "../contexts/SearchContext";
 import "./globals.css";
@@ -14,16 +15,12 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <body className="">
-        <main className="bg-gray-600 text-gray-300 min-h-[100vh]">
-          <SearchProvider>
-            <SearchBar />
-            <Link href="/live">Live</Link>
-            <Link href="/">Home</Link>
-            <Link href="/channel">Channel</Link>
-            <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <SearchProvider>
+          <main className="bg-gray-800 text-gray-200 min-h-[100vh]">
+            <Header />
             {children}
-          </SearchProvider>
-        </main>
+          </main>
+        </SearchProvider>
       </body>
     </html>
   );
