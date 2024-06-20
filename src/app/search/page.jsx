@@ -9,9 +9,11 @@ import { SearchContext, SearchProvider } from "../../contexts/SearchContext";
 import { useEffect } from "react";
 
 const displayLivestreamArray = (array) => {
+  if (!array) return <div></div>;
+
   return array.map((stream) => {
     return (
-      <div>
+      <div key={stream.channelLoginName}>
         <ChannelPreview liveStream={stream}></ChannelPreview>
       </div>
     );
@@ -19,46 +21,12 @@ const displayLivestreamArray = (array) => {
 };
 
 export default function SearchPage({ Component, pageProps }) {
-  const search = useContext(SearchContext);
-
-  const [homeLivestreamsData, setHomeLivestreamsData] = useState([]);
-  const searchChannelsByName = async (searchString) => {
-    const queryParams = {
-      query: searchString,
-    };
-    const accessToken = await getAccessToken();
-    const response = await fetch(
-      "https://api.twitch.tv/helix/search/channels?query=" + queryParams.query,
-      {
-        headers: {
-          "Client-Id": process.env.NEXT_PUBLIC_CLIENT_ID || "",
-          Authorization: `Bearer ${accessToken}`, // assuming getAccessToken is a function
-        },
-      }
-    );
-
-    if (response.ok) {
-      const requestJson = await response.json();
-      const data = requestJson.data;
-      const liveStreams = data.map((stream) => ({
-        channelName: stream.display_name,
-        title: stream.title,
-        game: stream.game_name,
-        thumbnailUrl: stream.thumbnail_url,
-      }));
-
-      setHomeLivestreamsData(liveStreams);
-    }
-  };
-
-  useEffect(() => {
-    searchChannelsByName(search.searchInput);
-  }, []);
-
+  const { searchInput, setSearchInput, searchResults, setSearchResults } =
+    useContext(SearchContext);
   return (
     <div className="block pl-52">
       <div className="grid lives-container gap-4">
-        {displayLivestreamArray(homeLivestreamsData)}
+        {displayLivestreamArray(searchResults)}
       </div>
     </div>
   );

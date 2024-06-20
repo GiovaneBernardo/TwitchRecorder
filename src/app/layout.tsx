@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
+import LeftSideBar from "../components/LeftSideBar";
 import { SearchProvider } from "../contexts/SearchContext";
 import "./globals.css";
 
@@ -18,7 +19,10 @@ export default function RootLayout({ children }) {
         <SearchProvider>
           <main className="bg-gray-800 text-gray-200 min-h-[100vh]">
             <Header />
-            {children}
+            <div className="flex">
+              <LeftSideBar />
+              <div className="main-content-div">{children}</div>
+            </div>
           </main>
         </SearchProvider>
       </body>
